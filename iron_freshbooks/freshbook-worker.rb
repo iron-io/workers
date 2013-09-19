@@ -146,7 +146,7 @@ output = renderer.result()
 # Configures smtp settings to send email.
 def init_mail
   puts "Preparing mail configuration"
-  mail_conf = {:address => params['stmp_address'],
+  mail_conf = {:address => params['smtp_address'],
                :port => params['port'],
                :domain => params['domain'],
                :user_name => params['from'],
