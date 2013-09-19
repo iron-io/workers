@@ -1,0 +1,6 @@
+runtime "ruby"
+
+gem "ruby-freshbooks"
+gem "mail"
+file "template.erb"
+exec "freshbook-worker.rb"
