@@ -2,5 +2,8 @@ runtime "ruby"
 
 gem "ruby-freshbooks"
 gem "mail"
-file "template.erb"
+
+file "template_standard.erb"
+file "template_grouping.erb"
+
 exec "freshbook-worker.rb"
