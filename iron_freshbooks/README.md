@@ -1,4 +1,3 @@
-
 To add to your account
 ```
 iron_worker upload https://github.com/iron-io/workers/blob/master/iron_freshbooks/freshbook.worker
@@ -40,12 +39,12 @@ client.tasks.create('freshbook',   {
    :authentication => 'plain',
    :days_ago =>  7,
    :project_id => 45 #if none defined all projects will be included in email
-   "grouping" : true/false #optional advanced option
+   :grouping => true/false #optional advanced option
     }
 )
 
 # optional advanced options
-   :grouping => true/false 
+   "grouping" : true/false 
    # groups entries by task ids found in notes /#\d+/
    # for example #23546
 ```
