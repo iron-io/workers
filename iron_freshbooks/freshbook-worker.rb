@@ -50,8 +50,8 @@ end
 
 class Report
   attr_accessor :fresh_client, :time_entry_task_ids, :projects,
-   :contractors, :time_entries, :time_hash, :project_time_totals,
-    :time_hash, :project_staff_totals
+  :contractors, :time_entries, :time_hash, :project_time_totals,
+  :time_hash, :project_staff_totals
 
   def initialize(account, api, days_ago=7, grouping=false)
     @days_ago = days_ago
@@ -111,92 +111,111 @@ class Report
         if time_entry.notes
           time_entry.notes.scan(/#\d+/).each do |some_id|
           @time_entry_task_ids[some_id] << time_entry
-          end
-          if time_entry.notes.scan(/#\d+/).empty?
-            @time_entry_task_ids["no_note_#id"] << time_entry
-          end
         end
-      end
-      @time_hash[key] = @time_entry_task_ids
-    end
-  end
-
-  def time_sort
-    @time_entries.each do |entry|
-      @time_hash[entry.project_name] << entry
-    end
-    @time_hash
-  end
-
-  def generate_project_time_totals_grouped
-    @project_time_totals = Hash.new(0)
-    @time_hash.each do |project_name, hash_by_sorted_id|
-      hash_by_sorted_id.each do |key, time_entries|
-        time_entries.each do |entry|
-          @project_time_totals[project_name] += entry.hours.to_f
+        if time_entry.notes.scan(/#\d+/).empty?
+          @time_entry_task_ids["the below entries have no task #id detected"] << time_entry
         end
       end
     end
+    @time_hash[key] = @time_entry_task_ids
   end
+end
 
-  def generate_project_staff_total_grouped
-    @project_staff_totals = Hash.new {|hsh, key| hsh[key] = Hash.new(0) }
-    @time_hash.each do |project_name, hash_by_sorted_id|
-      hash_by_sorted_id.each do |key, time_entries|
-        time_entries.each do |entry|
-          @project_staff_totals[project_name][entry.staff_name] += entry.hours.to_f
-        end
-      end
-    end
-    @project_staff_totals.each do  |project_name, employee_hash|
-      employee_hash.each do |name, hours|
-        employee_hash[name] = convert_hours(hours)
-      end
-    end
+def time_sort
+  @time_entries.each do |entry|
+    @time_hash[entry.project_name] << entry
   end
+  @time_hash
+end
 
-  def generate_project_time_totals
-    @project_time_totals = Hash.new(0)
-    @time_hash.each do |project_name, entries|
-      entries.each do |entry|
+def generate_project_time_totals_grouped
+  @project_time_totals = Hash.new(0)
+  @time_hash.each do |project_name, hash_by_sorted_id|
+    hash_by_sorted_id.each do |key, time_entries|
+      time_entries.each do |entry|
         @project_time_totals[project_name] += entry.hours.to_f
       end
     end
   end
+end
 
-  def generate_project_staff_total
-    @project_staff_totals = Hash.new {|hsh, key| hsh[key] = Hash.new(0) }
-
-    @time_hash.each do |project_name, entries|
-      entries.each do |entry|
+def generate_project_staff_total_grouped
+  @project_staff_totals = Hash.new {|hsh, key| hsh[key] = Hash.new(0) }
+  @time_hash.each do |project_name, hash_by_sorted_id|
+    hash_by_sorted_id.each do |key, time_entries|
+      time_entries.each do |entry|
         @project_staff_totals[project_name][entry.staff_name] += entry.hours.to_f
       end
     end
-    @project_staff_totals.each do  |project_name, employee_hash|
-      employee_hash.each do |name, hours|
-        employee_hash[name] = convert_hours(hours)
-      end
+  end
+  @project_staff_totals.each do  |project_name, employee_hash|
+    employee_hash.each do |name, hours|
+      employee_hash[name] = convert_hours(hours)
     end
   end
+end
 
-  def convert_hours(hours)
-    minutes = hours *=60
-    hh, mm = minutes.divmod(60)
-    "%d hours, %d minutes" % [ hh, mm]
+def generate_project_time_totals
+  @project_time_totals = Hash.new(0)
+  @time_hash.each do |project_name, entries|
+    entries.each do |entry|
+      @project_time_totals[project_name] += entry.hours.to_f
+    end
   end
+end
+
+def generate_project_staff_total
+  @project_staff_totals = Hash.new {|hsh, key| hsh[key] = Hash.new(0) }
+
+  @time_hash.each do |project_name, entries|
+    entries.each do |entry|
+      @project_staff_totals[project_name][entry.staff_name] += entry.hours.to_f
+    end
+  end
+  @project_staff_totals.each do  |project_name, employee_hash|
+    employee_hash.each do |name, hours|
+      employee_hash[name] = convert_hours(hours)
+    end
+  end
+end
+
+def convert_hours(hours)
+  minutes = hours *=60
+  hh, mm = minutes.divmod(60)
+  "%d hours, %d minutes" % [ hh, mm]
+end
 end
 
 ################ end class definitions ##############
 
 report = Report.new(params['account'], params['api_key'], params["days_ago"], params["grouping"])
-@time_hash = report.time_hash
-@report_project_time_totals = report.project_time_totals
-@project_staff_totals = report.project_staff_totals
-  if params["grouping"]
-    renderer = ERB.new(File.read("template_grouping.erb"))
+
+if params["project_id"] == nil
+  @report_project_time_totals = report.project_time_totals
+  @project_staff_totals = report.project_staff_totals
+  @time_hash = report.time_hash
+else
+  @selector                   = report.projects.select { |project| project.id == params["project_id"].to_s}
+  if @selector.any?
+    @selector = @selector.first.name
   else
-    renderer = ERB.new(File.read("template_standard.erb"))
+    @selector = "No Project Found - Please Revise Project ID"
   end
+  @time_hash = report.time_hash.select {|project_name, task_id| project_name == @selector}
+  @report_project_time_totals = report.project_time_totals.select {|project_name, total| project_name == @selector}
+  @project_staff_totals       = report.project_staff_totals.select {|project_name, staff_totals| project_name == @selector}
+  @no_projects = true if @project_staff_totals.empty? & @report_project_time_totals.empty?
+end
+
+@subject = params["subject"]
+
+if @no_projects == true 
+  renderer = ERB.new(File.read("template_no_data.erb"))
+elsif params["grouping"]
+  renderer = ERB.new(File.read("template_grouping.erb"))
+else
+  renderer = ERB.new(File.read("template_standard.erb"))
+end
 output = renderer.result()
 
 
@@ -238,7 +257,7 @@ def init_mail
             to = Array(params['to'])
 
             to.each do |email|
-              message_details = send_mail(email, params['from'], params["subject"], "#{output}")
+              message_details = send_mail(email, params['from'], @subject, "#{output}")
               puts "message_details: " + message_details.inspect
             end
             puts "IronFreshbooks Worker finished"

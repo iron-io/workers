@@ -1,17 +1,19 @@
 example payload for Freshbooks Turnkey Worker
 ```
 {
-   :account => '<insert>.freshbooks.com',
-   :api_key => '<insert>',
-   :to => '<insert>@gmail.com',
-   :from => '<insert>@gmail.com',
-   :password => '<insert>',
-   :domain => "gmail.com",
-   :subject => "Monthly Iron Freshbooks Report",
-   :smtp_address => 'smtp.gmail.com',
-   :port => 587,
-   :authentication => 'plain',
-   :days_ago =>  7
+   "account": '<insert>.freshbooks.com',
+   "api_key": '<insert>',
+   "to": '<insert>@gmail.com',
+   "from": '<insert>@gmail.com',
+   "password": '<insert>',
+   "domain": "gmail.com",
+   "subject": "Monthly Iron Freshbooks Report",
+   "smtp_address": 'smtp.gmail.com',
+   "port": 587,
+   "authentication": 'plain',
+   "days_ago":  7
+   "project_id": 45
+   "grouping" : true/false #optional advanced option
     }
 ``` 
 run task in ruby
@@ -29,7 +31,14 @@ client.tasks.create('freshbook',   {
    :smtp_address => 'smtp.gmail.com',
    :port => 587,
    :authentication => 'plain',
-   :days_ago =>  7
+   :days_ago =>  7,
+   :project_id => 45 #if none defined all projects will be included in email
+   "grouping" : true/false #optional advanced option
     }
 )
+
+# optional advanced options
+   :grouping => true/false 
+   # groups entries by task ids found in notes /#\d+/
+   # for example #23546
 ```

@@ -5,5 +5,6 @@ gem "mail"
 
 file "template_standard.erb"
 file "template_grouping.erb"
+file "template_no_data.erb"
 
 exec "freshbook-worker.rb"
