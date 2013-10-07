@@ -1,3 +1,10 @@
+
+To add to your account
+```
+iron_worker upload https://github.com/iron-io/workers/blob/master/iron_freshbooks/freshbook.worker
+```
+
+
 example payload for Freshbooks Turnkey Worker
 ```
 {
