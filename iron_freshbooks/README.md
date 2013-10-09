@@ -3,7 +3,7 @@
 iron_worker upload https://github.com/iron-io/workers/blob/master/iron_freshbooks/freshbook.worker
 ```
 ### example payload for Freshbooks Turnkey Worker
-```ruby
+```json
 {
    "account": '<insert>.freshbooks.com',
    "api_key": '<insert>',
@@ -15,7 +15,7 @@ iron_worker upload https://github.com/iron-io/workers/blob/master/iron_freshbook
    "smtp_address": 'smtp.gmail.com',
    "port": 587,
    "authentication": 'plain',
-   "days_ago":  7
+   "days_ago":  7G::Client.new()
    }
 ```
 ### optional advanced option
