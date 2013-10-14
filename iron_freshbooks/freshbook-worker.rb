@@ -33,6 +33,7 @@ end
 class TimeEntry
 
   attr_reader :time_entry_id, :staff_id ,:project_id, :task_id, :hours, :date, :notes, :billed, :project_name, :staff_name
+  attr_writer :hours
 
   def initialize(args)
     @time_entry_id = args["time_entry_id"]
@@ -109,17 +110,25 @@ class Report
     @time_hash.each do |key, time_entries_array|
       time_entries_array.each do |time_entry|
         if time_entry.notes
-          time_entry.notes.scan(/#\d+/).each do |some_id|
-          @time_entry_task_ids[some_id] << time_entry
+          scanned = time_entry.notes.scan(/#\d+/)
+          if scanned.length > 1
+            scanned.each do |some_id|
+              time_entry.hours = (time_entry.hours.to_f.round(3) / scanned.length).to_s
+            @time_entry_task_ids[some_id] << time_entry
+            end
+          else
+            scanned.each do |some_id|
+            @time_entry_task_ids[some_id] << time_entry
+            end
+          end
         end
         if time_entry.notes.scan(/#\d+/).empty?
           @time_entry_task_ids["the below entries have no task #id detected"] << time_entry
         end
       end
+      @time_hash[key] = @time_entry_task_ids
     end
-    @time_hash[key] = @time_entry_task_ids
   end
-end
 
 def time_sort
   @time_entries.each do |entry|
