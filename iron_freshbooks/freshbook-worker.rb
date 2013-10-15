@@ -141,6 +141,7 @@ class Report
           @project_time_totals[project_name] += entry.hours.to_f
         end
       end
+      @project_time_totals[project_name] = convert_hours(@project_time_totals[project_name])
     end
   end
 
