@@ -51,8 +51,8 @@ end
 
 class Report
   attr_accessor :fresh_client, :time_entry_task_ids, :projects,
-                :contractors, :time_entries, :time_hash, :project_time_totals,
-                :time_hash, :project_staff_totals
+  :contractors, :time_entries, :time_hash, :project_time_totals,
+  :time_hash, :project_staff_totals
 
   def initialize(account, api, days_ago=7, grouping=false)
     @days_ago = days_ago
@@ -133,12 +133,16 @@ class Report
     @time_hash
   end
 
-def generate_project_time_totals_grouped
-  @project_time_totals = Hash.new(0.00)
-  @time_hash.each do |project_name, hash_by_sorted_id|
-    hash_by_sorted_id.each do |key, time_entries|
-      time_entries.each do |entry|
-        @project_time_totals[project_name] += entry.hours.to_f
+  def generate_project_time_totals_grouped
+    @project_time_totals = Hash.new(0.00)
+    @time_hash.each do |project_name, hash_by_sorted_id|
+      hash_by_sorted_id.each do |key, time_entries|
+        time_entries.each do |entry|
+          @project_time_totals[project_name] += entry.hours.to_f
+        end
+      end
+    end
+  end
 
   def generate_project_staff_total_grouped
     @project_staff_totals = Hash.new { |hsh, key| hsh[key] = Hash.new(0) }
@@ -160,25 +164,26 @@ def generate_project_time_totals_grouped
     @project_time_totals = Hash.new(0)
     @time_hash.each do |project_name, entries|
       entries.each do |entry|
-        @project_time_totals[project_name] += entry.hours.to_f
-      end
+       @project_time_totals[project_name] += entry.hours.to_f
+     end
+     @project_time_totals[project_name] = convert_hours(@project_time_totals[project_name])
+   end
+ end
+
+ def generate_project_staff_total
+  @project_staff_totals = Hash.new { |hsh, key| hsh[key] = Hash.new(0) }
+
+  @time_hash.each do |project_name, entries|
+    entries.each do |entry|
+      @project_staff_totals[project_name][entry.staff_name] += entry.hours.to_f
     end
   end
-
-  def generate_project_staff_total
-    @project_staff_totals = Hash.new { |hsh, key| hsh[key] = Hash.new(0) }
-
-    @time_hash.each do |project_name, entries|
-      entries.each do |entry|
-        @project_staff_totals[project_name][entry.staff_name] += entry.hours.to_f
-      end
-    end
-    @project_staff_totals.each do |project_name, employee_hash|
-      employee_hash.each do |name, hours|
-        employee_hash[name] = convert_hours(hours)
-      end
+  @project_staff_totals.each do |project_name, employee_hash|
+    employee_hash.each do |name, hours|
+      employee_hash[name] = convert_hours(hours)
     end
   end
+end
 
 def convert_hours(hours)
   minutes = hours *=60
@@ -214,7 +219,7 @@ end
 def convert_hours(hours)
   minutes = hours *=60
   hh, mm = minutes.divmod(60)
-  "%d hours, %d min" % [ hh, mm]
+  "%d hours, <br/>  %d minutes" % [hh, mm]
 end
 
 if @no_projects == true 
@@ -231,41 +236,41 @@ output = renderer.result()
 def init_mail
   puts "Preparing mail configuration"
   mail_conf = {:address => params['smtp_address'],
-               :port => params['port'],
-               :domain => params['domain'],
-               :user_name => params['from'],
-               :password => params['password'],
-               :authentication => params['authentication'],
-               :enable_starttls_auto => true} #gmail requires this option
-  Mail.defaults do
-    delivery_method :smtp, mail_conf
-  end
-  puts "Mail service configured"
-end
-
-def send_mail(to, from, subject, content)
-  puts "Preparing email from: #{from}, to: #{to}, subject: #{subject}"
-  msg = Mail.new do
-    to to
-    from from
-    subject subject
-    html_part do |m|
-      content_type 'text/html'
-      body content
+   :port => params['port'],
+   :domain => params['domain'],
+   :user_name => params['from'],
+   :password => params['password'],
+   :authentication => params['authentication'],
+    :enable_starttls_auto => true} #gmail requires this option
+    Mail.defaults do
+      delivery_method :smtp, mail_conf
     end
+    puts "Mail service configured"
   end
-  puts "Mail ready, delivering"
-  details = msg.deliver
-  puts "Mail delivered!"
-  details
-end
 
-puts "IronFreshbooks Worker started"
-init_mail
-to = Array(params['to'])
+  def send_mail(to, from, subject, content)
+    puts "Preparing email from: #{from}, to: #{to}, subject: #{subject}"
+    msg = Mail.new do
+      to to
+      from from
+      subject subject
+      html_part do |m|
+        content_type 'text/html'
+        body content
+      end
+    end
+    puts "Mail ready, delivering"
+    details = msg.deliver
+    puts "Mail delivered!"
+    details
+  end
 
-to.each do |email|
-  message_details = send_mail(email, params['from'], @subject, "#{output}")
-  puts "message_details: " + message_details.inspect
-end
-puts "IronFreshbooks Worker finished"
+  puts "IronFreshbooks Worker started"
+  init_mail
+  to = Array(params['to'])
+
+  to.each do |email|
+    message_details = send_mail(email, params['from'], @subject, "#{output}")
+    puts "message_details: " + message_details.inspect
+  end
+  puts "IronFreshbooks Worker finished"
