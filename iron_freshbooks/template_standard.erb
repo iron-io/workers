@@ -38,13 +38,13 @@
       Hours
       </th>
       <th style='font-family: Helvetica;border:none;font-size: 14px;font-weight: bold;line-height: 150%;text-align: left'  width='15%' mc:edit='data_table_heading02'>
-      Staff ID
+      Team Member
       </th>
       <th style='font-family: Helvetica;border:none;font-size: 14px;font-weight: bold;line-height: 150%;text-align: left'  width='55%' mc:edit='data_table_heading02' >
       Notes
       </th>
       </tr>
- 
+
 <%   time_entries.sort_by{|entry| entry.date}.each_with_index do |entry, index| %>
         <% if index.odd? %>
         <tr style= 'background-color:#ffffff;' mc:repeatable>
@@ -60,15 +60,15 @@
         <td style='border-collapse: collapse;border:none;color: #202020;font-family: Helvetica;font-size: 12px;line-height: 110%;text-align: left' mc:edit='data_table_content00' valign='top' >
         <%= entry.staff_name %>
         </td>
-        <td style='border-collapse: collapse;border:none;color: #202020;font-family: Helvetica;font-size: 12px;line-height: 110%;text-align: left' mc:edit='data_table_content00' td valign='top' > 
-        <%= entry.notes %>  
+        <td style='border-collapse: collapse;border:none;color: #202020;font-family: Helvetica;font-size: 12px;line-height: 110%;text-align: left' mc:edit='data_table_content00' td valign='top' >
+        <%= entry.notes %>
         </td>
         </tr>
         <% end %>
         <tr mc:repeatable style="border:none; background-color: #deeffc;"><td colspan='4' style='border-collapse:border:none; collapse;color: #202020;font-family: Helvetica; padding-bottom:10px; font-size: 16px; line-height: 110%;text-align: center' mc:edit='data_table_content00' valign='top' ><ul style='list-style-type:none;'>
       <li><span style='font-weight: bold;'>Total Time: </span> <span style='font-weight:300;'><%= convert_hours(@report_project_time_totals[project_name])  %></li>
      <%  @project_staff_totals[project_name.to_s].each do |staff_name, total_time|  %>
-         <li><span style='font-weight: bold;'><%= staff_name %>'s Total Hours' : </span> <span style='font-weight:300;'><%= total_time %></li>
+         <li><span style='font-weight: bold;'><%= staff_name %>'s Total Hours: </span> <span style='font-weight:300;'><%= total_time %></li>
       <% end %>
       </ul></td></tr>
 
