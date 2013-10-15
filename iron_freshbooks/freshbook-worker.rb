@@ -112,15 +112,12 @@ class Report
         if time_entry.notes
           scanned = time_entry.notes.scan(/#\d+/)
           if scanned.length > 1
-            scanned.each do |some_id|
-              time_entry.hours = (time_entry.hours.to_f.round(3) / scanned.length).to_s
-            @time_entry_task_ids[some_id] << time_entry
-            end
-          else
-            scanned.each do |some_id|
-            @time_entry_task_ids[some_id] << time_entry
-            end
+            time_entry.hours = (time_entry.hours.to_f / scanned.length).round(2).to_s
           end
+          scanned.each do |some_id|
+            @time_entry_task_ids[some_id] << time_entry
+          end
+
         end
         if time_entry.notes.scan(/#\d+/).empty?
           @time_entry_task_ids["the below entries have no task #id detected"] << time_entry
@@ -138,7 +135,7 @@ def time_sort
 end
 
 def generate_project_time_totals_grouped
-  @project_time_totals = Hash.new(0)
+  @project_time_totals = Hash.new(0.00)
   @time_hash.each do |project_name, hash_by_sorted_id|
     hash_by_sorted_id.each do |key, time_entries|
       time_entries.each do |entry|
@@ -191,7 +188,7 @@ end
 def convert_hours(hours)
   minutes = hours *=60
   hh, mm = minutes.divmod(60)
-  "%d hours, %d minutes" % [ hh, mm]
+  "%d hours, %d min" % [ hh, mm]
 end
 end
 
@@ -217,6 +214,12 @@ else
 end
 
 @subject = params["subject"]
+
+def convert_hours(hours)
+  minutes = hours *=60
+  hh, mm = minutes.divmod(60)
+  "%d hours, %d min" % [ hh, mm]
+end
 
 if @no_projects == true 
   renderer = ERB.new(File.read("template_no_data.erb"))
