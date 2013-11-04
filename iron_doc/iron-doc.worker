@@ -1,5 +1,5 @@
 runtime "ruby"
-gem pandoc-ruby
+gem "pandoc-ruby"
 gem "aws-s3"
 gem "iron_cache"
 
