@@ -1,0 +1,14 @@
+
+  { "original_type" => "",
+    "new_type" => "",
+    "file_location" => "",
+    "cache_name" => "",
+    "file_name" => "",
+    "s3" => true,
+    "s3_access_key_id" => '',
+    "s3_secret_access_key" => '',
+    "s3_bucket" => '',
+    "iron_project_id" => "",
+    "iron_token" => "",
+    "iron_cache" => false
+  }
