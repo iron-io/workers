@@ -1,6 +1,6 @@
 ### Turn the Key one line upload
 ```
-iron_worker upload https://github.com/iron-io/workers/blob/master/iron_freshbooks/freshbook.worker
+iron_worker upload https://github.com/iron-io/workers/blob/master/iron_freshbooks/freshbooks.worker
 ```
 ### example payload for Freshbooks Turnkey Worker
 ```json
@@ -25,7 +25,7 @@ iron_worker upload https://github.com/iron-io/workers/blob/master/iron_freshbook
 
 ### example task creation got worker in ruby
 ```ruby
-client.tasks.create('freshbook',   {
+client.tasks.create('freshbooks',   {
    :account => '<insert>.freshbooks.com',
    :api_key => '<insert>',
    :to => '<insert>@gmail.com',
@@ -54,7 +54,7 @@ client.tasks.create('freshbook',   {
 ### create a scheduled task for worker in ruby 
 (feel free to schedule tasks in the method of your choice curl/node/go/php/java)
 ```ruby
-schedule =client.schedules.create('freshbook', {
+schedule =client.schedules.create('freshbooks', {
    "account": '<insert>.freshbooks.com',
    "api_key": '<insert>',
    "to": '<insert>@gmail.com',
