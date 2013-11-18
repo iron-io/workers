@@ -46,7 +46,7 @@
       </tr>
       <% hash_by_sorted_id.each do |key, time_entries| %>
       <tr mc:repeatable style ="border:none;background-color:#c8e7ff;"> 
-      <td style='font-family: Helvetica;border:none;font-size: 14px;font-weight: bold;line-height: 150%;text-align: left'  colspan='4' mc:edit='data_table_heading02' >task: <%= key.to_s %> </td></tr>
+      <td style='font-family: Helvetica;border:none;font-size: 14px;font-weight: bold;line-height: 150%;text-align: left'  colspan='4' mc:edit='data_table_heading02' >task: <%= key.to_s %> : <%= total_time_from_entries(time_entries) %> </td></tr>
       <% time_entries.sort_by{|entry| entry.date}.each_with_index do |entry, index| %>
         <% if index.odd? %>
         <tr style= 'background-color:#ffffff;' mc:repeatable>
