@@ -2,7 +2,7 @@ require 'ruby-freshbooks'
 require 'mail'
 require 'erb'
 
-class Contractor
+ class Contractor
 
   attr_reader :id, :name, :email, :status, :rate, :task_id, :projects
 
@@ -184,13 +184,13 @@ class Report
       employee_hash[name] = convert_hours(hours)
     end
   end
-end
+  end
 
-def convert_hours(hours)
-  minutes = hours *=60
-  hh, mm = minutes.divmod(60)
-  "%d hours, %d min" % [ hh, mm]
-end
+  def convert_hours(hours)
+    minutes = hours *=60
+    hh, mm = minutes.divmod(60)
+    "%d hours, %d min" % [ hh, mm]
+  end
 
 end
 
@@ -221,6 +221,17 @@ def convert_hours(hours)
   minutes = hours *=60
   hh, mm = minutes.divmod(60)
   "%d hours, <br/>  %d minutes" % [hh, mm]
+end
+
+def convert_hours_header_format(hours)
+  minutes = hours *=60
+  hh, mm = minutes.divmod(60)
+  "%d hours %d minutes" % [hh, mm]
+end
+
+def total_time_from_entries(time_entries)
+  total = time_entries.inject(0) {|sum, time_entry| sum += time_entry.hours.to_f}
+  convert_hours_header_format(total)
 end
 
 if @no_projects == true 
