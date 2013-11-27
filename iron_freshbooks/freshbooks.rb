@@ -218,7 +218,7 @@ end
 @subject = params["subject"]
 
 def convert_hours(hours)
-  minutes = hours *=60
+  minutes = hours.to_i * 60
   hh, mm = minutes.divmod(60)
   "%d hours, <br/>  %d minutes" % [hh, mm]
 end
