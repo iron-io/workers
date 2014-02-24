@@ -1,0 +1,8 @@
+{
+    "workers": [
+        {
+            "name": "HipChat",
+            "url": "https://github.com/treeder/hipchat_worker/blob/master/hipchat.worker"
+        }
+    ]
+}
