@@ -1,0 +1,16 @@
+runtime 'binary'
+exec 'pandoc.sh'
+
+#cm-super 0.3.4-3
+deb 'http://launchpadlibrarian.net/26164806/cm-super_0.3.4-3_all.deb'
+#fonts-inconsolata_001.010
+deb 'http://mirrors.kernel.org/ubuntu/pool/universe/f/fonts-inconsolata/fonts-inconsolata_001.010-4_all.deb'
+#texlive-latex-extra
+deb 'http://launchpadlibrarian.net/61089868/texlive-latex-extra_2009-10ubuntu1_all.deb'
+#texlive-xetex
+deb 'http://launchpadlibrarian.net/85824553/texlive-xetex_2009-15_all.deb'
+
+#pandoc
+deb 'pandoc-1.13.2-1-amd64.deb'
+file 'input.txt'
+remote
