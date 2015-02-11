@@ -1,0 +1,28 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    aws-s3 (0.6.3)
+      builder
+      mime-types
+      xml-simple
+    builder (3.2.2)
+    iron_cache (1.4.2)
+      iron_core (>= 0.5.1)
+    iron_core (1.0.5)
+      rest (>= 2.6.4)
+    mime-types (2.4.3)
+    net-http-persistent (2.9.4)
+    netrc (0.10.2)
+    pandoc-ruby (1.0.0)
+    rest (3.0.3)
+      net-http-persistent (>= 2.9.1)
+      netrc
+    xml-simple (1.1.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  aws-s3
+  iron_cache
+  pandoc-ruby

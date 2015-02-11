@@ -1,5 +1,5 @@
 runtime 'binary'
-exec 'pandoc.sh'
+exec 'iron-doc.sh'
 
 #cm-super 0.3.4-3
 deb 'http://launchpadlibrarian.net/26164806/cm-super_0.3.4-3_all.deb'
@@ -11,6 +11,8 @@ deb 'http://launchpadlibrarian.net/61089868/texlive-latex-extra_2009-10ubuntu1_a
 deb 'http://launchpadlibrarian.net/85824553/texlive-xetex_2009-15_all.deb'
 
 #pandoc
-deb 'pandoc-1.13.2-1-amd64.deb'
-file 'input.txt'
+deb 'http://ftp.us.debian.org/debian/pool/main/p/pandoc/pandoc_1.9.4.2-2_amd64.deb'
+file 'test.txt'
+
+# build worker and dependencies remotely
 remote

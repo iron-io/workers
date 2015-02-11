@@ -1,0 +1,5 @@
+source "http://rubygems.org"
+
+gem "pandoc-ruby"
+gem "aws-s3"
+gem "iron_cache"
