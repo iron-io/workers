@@ -3,6 +3,12 @@ require "httparty"
   # slightly unsure if Pandoc Ruby works correctly
   # PandocRuby.bin_path = "/usr/local/bin"
 
+
+@params
+@config
+ENV
+@task_id
+
 # read contents of file save into response variable
 response = HTTParty.get(params["file_location"])
 # setup conversion

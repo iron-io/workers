@@ -1,7 +1,9 @@
 runtime "ruby"
 
+stack "ruby-2.1"
 # declare gem dependencies
 gemfile "Gemfile"
+
 exec "executable.rb"
 
 remote

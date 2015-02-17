@@ -1,0 +1,9 @@
+runtime "ruby"
+
+stack "ffmpeg-2.3"
+
+file "harddrivespinning.mp4"
+
+gem "streamio-ffmpeg"
+
+exec "get_video_info.rb"
